@@ -1,0 +1,535 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project
+  xmlns="http://schemas.microsoft.com/developer/msbuild/2003" 
+  ToolsVersion="4.0">
+
+  <!-- IMPORTANT - you must import these targets for the build scripts to function. -->
+  <Import Project="AcmeCorp.BizTalkBuildSample.targets" />
+  <Import Project="..\packages\StealFocus.Build.1.2.30211.0\Scripts\StealFocus.Build.targets" />
+
+  <PropertyGroup Condition=" '$(BuildReleaseConfiguration)'=='' ">
+    <BuildReleaseConfiguration>true</BuildReleaseConfiguration>
+  </PropertyGroup>
+
+  <PropertyGroup>
+    <CSharpProjectFileConfigurationIncludeFilter>$(SolutionDirectoryPath)\**\*.csproj</CSharpProjectFileConfigurationIncludeFilter>
+    <VisualBasicProjectFileConfigurationIncludeFilter>$(SolutionDirectoryPath)\**\*.vbproj</VisualBasicProjectFileConfigurationIncludeFilter>
+    <WindowsAzureProjectFileConfigurationIncludeFilter>$(SolutionDirectoryPath)\**\*.ccproj</WindowsAzureProjectFileConfigurationIncludeFilter>
+    <ProjectFileConfigurationExcludeFilter>$(SolutionDirectoryPath)\AcmeCorp.BizTalkBuildSample.Orchestrations\AcmeCorp.BizTalkBuildSample.Orchestrations.csproj</ProjectFileConfigurationExcludeFilter>
+    <CSharpProjectImportFilePath>$(SolutionDirectoryPath)\Scripts\AcmeCorp.BizTalkBuildSample.Build.Project.CSharp.targets</CSharpProjectImportFilePath>
+    <VisualBasicProjectImportFilePath>$(SolutionDirectoryPath)\Scripts\AcmeCorp.BizTalkBuildSample.Build.Project.VisualBasic.targets</VisualBasicProjectImportFilePath>
+    <CodeAnalysisRuleSetFilePath>$(SolutionDirectoryPath)\AcmeCorp.BizTalkBuildSample.ruleset</CodeAnalysisRuleSetFilePath>
+    <StrongNameKeyPairPath>$(SolutionDirectoryPath)\AcmeCorp.BizTalkBuildSample.StrongNameKeyPair.snk</StrongNameKeyPairPath>
+    <StrongNamePublicKeyPath>$(SolutionDirectoryPath)\AcmeCorp.BizTalkBuildSample.StrongNamePublicKey.snk</StrongNamePublicKeyPath>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <SolutionToBuild Include="$(SolutionDirectoryPath)\AcmeCorp.BizTalkBuildSample.sln">
+      <!-- 
+      Use "Targets" to control which Targets are called e.g. you can switch from the default of "Build" to "Rebuild".
+      Use "Properties" to send additional properties to the Solution build.
+      <Targets>Rebuild</Targets>
+      <Properties>FirstHelloWorldProperty=HelloYou!;SecondHelloWorldProperty=HelloMe!</Properties>
+      -->
+      <Targets />
+      <Properties />
+    </SolutionToBuild>
+  </ItemGroup>
+
+  <ItemGroup>
+    <ConfigurationToBuild Include="Debug|Any CPU">
+      <FlavorToBuild>Debug</FlavorToBuild>
+      <PlatformToBuild>Any CPU</PlatformToBuild>
+      <!-- 
+      There is a test run for all configurations, this property determines if the 
+      BizTalk application is redeployed with the binaries for this configuration. 
+      -->
+      <DeployToBizTalkApplicationForTestRun>true</DeployToBizTalkApplicationForTestRun>
+      <!-- 
+      Whether to initialise the BizTalk Hosts and Handlers when deploying the 
+      BizTalk application. 
+      -->
+      <InitialiseBizTalkHostsAndHandlers>true</InitialiseBizTalkHostsAndHandlers>
+    </ConfigurationToBuild>
+  </ItemGroup>
+
+  <ItemGroup Condition=" '$(BuildReleaseConfiguration)'=='true' ">
+    <ConfigurationToBuild Include="Release|Any CPU">
+      <FlavorToBuild>Release</FlavorToBuild>
+      <PlatformToBuild>Any CPU</PlatformToBuild>
+      <!-- 
+      There is a test run for all configurations, this property determines if the 
+      BizTalk application is redeployed with the binaries for this configuration. 
+      -->
+      <DeployToBizTalkApplicationForTestRun>true</DeployToBizTalkApplicationForTestRun>
+      <!-- 
+      Whether to initialise the BizTalk Hosts and Handlers when deploying the 
+      BizTalk application. 
+      -->
+      <InitialiseBizTalkHostsAndHandlers>false</InitialiseBizTalkHostsAndHandlers>
+    </ConfigurationToBuild>
+  </ItemGroup>
+
+  <ItemGroup>
+    <!--<DatabaseProject Include="$(SolutionDirectoryPath)\AcmeCorp.BizTalkBuildSample.Database\AcmeCorp.BizTalkBuildSample.Database.dbproj">
+      <Deploy>true</Deploy>
+      <ConfigurationToDeploy>Debug</ConfigurationToDeploy>
+    </DatabaseProject>-->
+  </ItemGroup>
+
+  <!---
+  Default properties for BizTalk.
+  -->
+  <PropertyGroup>
+    <BizTalkConfigDatabaseName>BizTalkMgmtDb</BizTalkConfigDatabaseName>
+    <BizTalkDatabaseServerName>$(ComputerName)</BizTalkDatabaseServerName>
+    <BizTalkManagementDatabaseConnectionString>server=$(BizTalkDatabaseServerName);database=$(BizTalkConfigDatabaseName);integrated security=sspi;</BizTalkManagementDatabaseConnectionString>
+    <BizTalkServiceUsername>$(ComputerName)\BizTalkAccount1</BizTalkServiceUsername>
+    <BizTalkServicePassword>password1</BizTalkServicePassword>
+    <SolutionConfigurationToDeploy>Debug</SolutionConfigurationToDeploy>
+  </PropertyGroup>
+
+  <!---
+  Property overrides for BizTalk.
+  -->
+  <PropertyGroup Condition=" '$(ComputerName)'=='MyMachineName' ">
+    <BizTalkDatabaseServerName>$(ComputerName)\InstanceName</BizTalkDatabaseServerName>
+    <BizTalkServiceUsername>$(ComputerName)\BizTalkAccount2</BizTalkServiceUsername>
+    <BizTalkServicePassword>password2</BizTalkServicePassword>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <!--
+    Dependent BizTalk applications will be removed.
+    -->
+    <!--
+    <DependentBizTalkApplication Include="MyDependentBizTalkApplicationName">
+      <BizTalkGacAssemblyNameFilter>MyDependentBizTalkApplicationName*</BizTalkGacAssemblyNameFilter>
+      <BizTalkGacVersionFilter>*</BizTalkGacVersionFilter>
+      <BizTalkGacLocaleFilter>*</BizTalkGacLocaleFilter>
+      <BizTalkGacPublicKeyTokenFilter>*</BizTalkGacPublicKeyTokenFilter>
+    </DependentBizTalkApplication>
+    -->
+  </ItemGroup>
+  
+  <ItemGroup>
+    <BizTalkHost Include="AcmeCorpBizTalkBuildSampleReceive">
+      <Username>$(BizTalkServiceUsername)</Username>
+      <Password>$(BizTalkServicePassword)</Password>
+      <HostTracking>false</HostTracking>
+      <!-- HostType = InProcess | Isolated -->
+      <HostType>InProcess</HostType>
+      <IsDefault>false</IsDefault>
+      <Trusted>false</Trusted>
+    </BizTalkHost>
+    <BizTalkHost Include="AcmeCorpBizTalkBuildSampleSend">
+      <Username>$(BizTalkServiceUsername)</Username>
+      <Password>$(BizTalkServicePassword)</Password>
+      <HostTracking>false</HostTracking>
+      <!-- HostType = InProcess | Isolated -->
+      <HostType>InProcess</HostType>
+      <IsDefault>false</IsDefault>
+      <Trusted>false</Trusted>
+    </BizTalkHost>
+    <BizTalkHost Include="AcmeCorpBizTalkBuildSampleProcess">
+      <Username>$(BizTalkServiceUsername)</Username>
+      <Password>$(BizTalkServicePassword)</Password>
+      <HostTracking>false</HostTracking>
+      <!-- HostType = InProcess | Isolated -->
+      <HostType>InProcess</HostType>
+      <IsDefault>false</IsDefault>
+      <Trusted>false</Trusted>
+    </BizTalkHost>
+  </ItemGroup>
+
+  <PropertyGroup>
+    <BizTalkApplicationName>AcmeCorp.BizTalkBuildSample</BizTalkApplicationName>
+    <BizTalkGacAssemblyNameFilter>$(BizTalkApplicationName)*</BizTalkGacAssemblyNameFilter>
+    <BizTalkGacLocaleFilter>*</BizTalkGacLocaleFilter>
+    <BizTalkGacPublicKeyTokenFilter>*</BizTalkGacPublicKeyTokenFilter>
+    <BizTalkHostWindowsGroupName>BizTalk Application Users</BizTalkHostWindowsGroupName>
+    <BizTalkInstallerPackageOutputPath>$(BBuildDirectoryPath)\$(SolutionConfigurationToDeploy)\$(BizTalkApplicationName).$(SolutionConfigurationToDeploy).msi</BizTalkInstallerPackageOutputPath>
+    <BizTalkServerName>$(ComputerName)</BizTalkServerName>
+    <BizTalkInstallDirectory>%BTAD_InstallDir%\$(BizTalkApplicationName)</BizTalkInstallDirectory>
+    <!-- This controls which "BindingsFile" is applied to the current environment. -->
+    <BizTalkDevelopmentTargetEnvironmentName>Development</BizTalkDevelopmentTargetEnvironmentName>
+    <BizTalkBindingLog>$(BizTalkApplicationName).BizTalk.Binding.log</BizTalkBindingLog>
+  </PropertyGroup>
+
+  <PropertyGroup Condition=" '$(BranchName)'=='' Or '$(BranchName)'=='Trunk' Or '$(BranchName)'=='Unspecified' ">
+    <BizTalkGacVersionFilter>0.0.*</BizTalkGacVersionFilter>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(BranchName)'=='R1.0' ">
+    <BizTalkGacVersionFilter>1.0.*</BizTalkGacVersionFilter>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <!-- 
+    The following Adapters will be created/deleted accordingly with the provided 
+    Host. You can specify 'BizTalkReceiveHostName' or 'BizTalkSendHostName' metadata
+    but not both.
+    -->
+    <Adapter Include="MsmqReceive">
+      <BizTalkAdapterName>MSMQ</BizTalkAdapterName>
+      <BizTalkReceiveHostName>AcmeCorpBizTalkBuildSampleReceive</BizTalkReceiveHostName>
+    </Adapter>
+    <Adapter Include="MsmqSend">
+      <BizTalkAdapterName>MSMQ</BizTalkAdapterName>
+      <BizTalkSendHostName>AcmeCorpBizTalkBuildSampleSend</BizTalkSendHostName>
+    </Adapter>
+  </ItemGroup>
+
+  <ItemGroup>
+    <!-- 
+    The following Assemblies will be added as resources to the BizTalk application.
+    -->
+    <BizTalkAssembly
+      Include="$(BuildDirectoryPath)\$(SolutionConfigurationToDeploy)\AcmeCorp.BizTalkBuildSample.Schemas.dll">
+      <InstallOptions>GacOnAdd,GacOnInstall,GacOnImport</InstallOptions>
+      <Type>System.BizTalk:BizTalkAssembly</Type>
+    </BizTalkAssembly>
+    <BizTalkAssembly
+      Include="$(BuildDirectoryPath)\$(SolutionConfigurationToDeploy)\AcmeCorp.BizTalkBuildSample.Pipelines.dll">
+      <InstallOptions>GacOnAdd,GacOnInstall,GacOnImport</InstallOptions>
+      <Type>System.BizTalk:BizTalkAssembly</Type>
+    </BizTalkAssembly>
+    <BizTalkAssembly
+      Include="$(BuildDirectoryPath)\$(SolutionConfigurationToDeploy)\AcmeCorp.BizTalkBuildSample.Maps.dll">
+      <InstallOptions>GacOnAdd,GacOnInstall,GacOnImport</InstallOptions>
+      <Type>System.BizTalk:BizTalkAssembly</Type>
+    </BizTalkAssembly>
+    <BizTalkAssembly
+      Include="$(BuildDirectoryPath)\$(SolutionConfigurationToDeploy)\AcmeCorp.BizTalkBuildSample.Orchestrations.dll">
+      <InstallOptions>GacOnAdd,GacOnInstall,GacOnImport</InstallOptions>
+      <Type>System.BizTalk:BizTalkAssembly</Type>
+    </BizTalkAssembly>
+  </ItemGroup>
+
+  <ItemGroup>
+    <Environments Include="Development">
+      <IsIncludedInDesktopBuild>true</IsIncludedInDesktopBuild>
+      <BindingDictionaryFilePath>..\Artefacts\BizTalk\Bindings\Dictionaries\Development.xml</BindingDictionaryFilePath>
+    </Environments>
+    <Environments Include="Integration">
+      <IsIncludedInDesktopBuild>true</IsIncludedInDesktopBuild>
+      <BindingDictionaryFilePath>..\Artefacts\BizTalk\Bindings\Dictionaries\Integration.xml</BindingDictionaryFilePath>
+    </Environments>
+    <Environments Include="PreProduction">
+      <IsIncludedInDesktopBuild>false</IsIncludedInDesktopBuild>
+      <BindingDictionaryFilePath>..\Artefacts\BizTalk\Bindings\Dictionaries\PreProduction.xml</BindingDictionaryFilePath>
+    </Environments>
+    <Environments Include="Production">
+      <IsIncludedInDesktopBuild>false</IsIncludedInDesktopBuild>
+      <BindingDictionaryFilePath>..\Artefacts\BizTalk\Bindings\Dictionaries\Production.xml</BindingDictionaryFilePath>
+    </Environments>
+    <Environments Include="SystemTest">
+      <IsIncludedInDesktopBuild>false</IsIncludedInDesktopBuild>
+      <BindingDictionaryFilePath>..\Artefacts\BizTalk\Bindings\Dictionaries\SystemTest.xml</BindingDictionaryFilePath>
+    </Environments>
+    <Environments Include="UserAcceptanceTest">
+      <IsIncludedInDesktopBuild>false</IsIncludedInDesktopBuild>
+      <BindingDictionaryFilePath>..\Artefacts\BizTalk\Bindings\Dictionaries\UserAcceptanceTest.xml</BindingDictionaryFilePath>
+    </Environments>
+  </ItemGroup>
+
+  <!-- 
+    The following Binding files will be added as resources to the BizTalk 
+    application. The "TargetEnvironment" will be used for the target
+    environment select in the BizTalk installer.
+  -->
+  <ItemGroup>
+    <BindingsFile
+      Include="..\Artefacts\BizTalk\Bindings\AcmeCorp.BizTalkBuildSample.BindingInfo.Core.Development.xml">
+      <TargetEnvironment>Development</TargetEnvironment>
+    </BindingsFile>
+    <BindingsFile
+      Include="..\Artefacts\BizTalk\Bindings\AcmeCorp.BizTalkBuildSample.BindingInfo.Tests.Development.xml">
+      <TargetEnvironment>Development</TargetEnvironment>
+    </BindingsFile>
+  </ItemGroup>
+  <ItemGroup Condition=" '$(IsDesktopBuild)'!='true' ">
+    <BindingsFile
+      Include="..\Artefacts\BizTalk\Bindings\AcmeCorp.BizTalkBuildSample.BindingInfo.Core.Integration.xml">
+      <TargetEnvironment>Integration</TargetEnvironment>
+    </BindingsFile>
+  </ItemGroup>
+  <ItemGroup Condition=" '$(IsDesktopBuild)'!='true' ">
+    <BindingsFile
+      Include="..\Artefacts\BizTalk\Bindings\AcmeCorp.BizTalkBuildSample.BindingInfo.Core.PreProduction.xml">
+      <TargetEnvironment>PreProduction</TargetEnvironment>
+    </BindingsFile>
+  </ItemGroup>
+  <ItemGroup Condition=" '$(IsDesktopBuild)'!='true' ">
+    <BindingsFile
+      Include="..\Artefacts\BizTalk\Bindings\AcmeCorp.BizTalkBuildSample.BindingInfo.Core.Production.xml">
+      <TargetEnvironment>Production</TargetEnvironment>
+    </BindingsFile>
+  </ItemGroup>
+  <ItemGroup Condition=" '$(IsDesktopBuild)'!='true' ">
+    <BindingsFile
+      Include="..\Artefacts\BizTalk\Bindings\AcmeCorp.BizTalkBuildSample.BindingInfo.Core.SystemTest.xml">
+      <TargetEnvironment>SystemTest</TargetEnvironment>
+    </BindingsFile>
+  </ItemGroup>
+  <ItemGroup Condition=" '$(IsDesktopBuild)'!='true' ">
+    <BindingsFile
+      Include="..\Artefacts\BizTalk\Bindings\AcmeCorp.BizTalkBuildSample.BindingInfo.Core.UserAcceptanceTest.xml">
+      <TargetEnvironment>UserAcceptanceTest</TargetEnvironment>
+    </BindingsFile>
+  </ItemGroup>
+
+  <Target Name="GenerateConfigurationFiles">
+    <ItemGroup>
+      <ConfigurationFileTargetDirectory Include="..\Artefacts\Configuration" />
+      <!--
+      <ConfigurationFileTargetDirectory Include="..\ProjectDirectory1" />
+      <ConfigurationFileTargetDirectory Include="..\ProjectDirectory2" />
+      -->
+    </ItemGroup>
+    <!-- Generate configuration files for the "Artefacts" folder these are used when unit testing. -->
+    <Exec
+      Command='powershell -nologo -noprofile -executionpolicy unrestricted -command "&amp; { . \".\ConfigurationFiles-Generate.ps1\"; Generate-ConfigurationFiles -DictionaryFilePath \"..\Artefacts\Configuration\Dictionaries\Development.xml\" -TemplatesDirectoryPath \"..\Artefacts\Configuration\Templates\" -TargetDirectoryPath \"%(ConfigurationFileTargetDirectory.Identity)\" -verbose }"'
+      LogStandardErrorAsError="true"
+      ContinueOnError="false" />
+  </Target>
+
+  <Target Name="GenerateBindingFiles">
+    <ItemGroup>
+      <BindingFileTemplates Include="..\Artefacts\BizTalk\Bindings\Templates\**\*.*" />
+    </ItemGroup>
+    <Copy
+      SourceFiles="@(BindingFileTemplates)"
+      DestinationFiles="@(BindingFileTemplates->'..\Artefacts\BizTalk\Bindings\Temp\$(EnvironmentsIdentity)\%(RecursiveDir)%(Filename).$(EnvironmentsIdentity)%(Extension)')" />
+    <ItemGroup>
+      <TargetFilePaths Include="..\Artefacts\BizTalk\Bindings\Temp\$(EnvironmentsIdentity)\*$(EnvironmentsIdentity).*" />
+    </ItemGroup>
+    <Exec
+      Command='powershell -nologo -noprofile -executionpolicy unrestricted -command "&amp; { . \".\ConfigurationFiles-Generate.ps1\"; Generate-ConfigurationFiles -DictionaryFilePath \"$(EnvironmentBindingDictionaryFilePath)\" -TemplatesDirectoryPath \"..\Artefacts\BizTalk\Bindings\Temp\$(EnvironmentsIdentity)\" -TargetDirectoryPath \"..\Artefacts\BizTalk\Bindings\" -verbose }"'
+      LogStandardErrorAsError="true"
+      ContinueOnError="false" />
+  </Target>
+
+  <!-- Only called if "IsInitialiseEnvironmentBuild" property is set to "true". -->
+  <Target Name="BeforeInitialiseBuildCustom">
+    <!-- Enter your custom steps here. -->
+  </Target>
+
+  <!-- Only called if "IsInitialiseEnvironmentBuild" property is set to "true". -->
+  <Target Name="AfterInitialiseBuildCustom">
+    <!-- Enter your custom steps here. -->
+  </Target>
+
+  <Target Name="BeforeInitialiseEnvironmentCustom">
+    <!-- Enter your custom steps here. -->
+    <!-- Create local queues for tests. -->
+    <ItemGroup>
+      <Msmq Include="AcmeCorp.BizTalkBuildSample.MessageIn" />
+      <Msmq Include="AcmeCorp.BizTalkBuildSample.MessageOut" />
+    </ItemGroup>
+    <MSBuild.ExtensionPack.Communication.MSMQ
+      TaskAction="Create"
+      Path=".\private$\%(Msmq.Identity)"
+      Force="true"
+      Transactional="true" />
+    <ItemGroup>
+      <Allow Include="$(BizTalkServiceUsername)">
+        <Permissions>FullControl</Permissions>
+      </Allow>
+    </ItemGroup>
+    <MSBuild.ExtensionPack.Communication.MSMQ
+      TaskAction="SetPermissions"
+      Path=".\private$\%(Msmq.Identity)"
+      Allow="@(Allow)" />
+  </Target>
+
+  <Target Name="AfterInitialiseEnvironmentCustom">
+    <!-- Enter your custom steps here. -->
+  </Target>
+
+  <Target Name="BeforeCodeGenerationCustom">
+    <!-- Enter your custom steps here. -->
+    <CallTarget Targets="GenerateConfigurationFiles" />
+  </Target>
+
+  <Target Name="AfterCodeGenerationCustom">
+    <!-- Enter your custom steps here. -->
+  </Target>
+
+  <Target Name="BeforeSolutionCompileCustom">
+    <!-- Enter your custom steps here. -->
+  </Target>
+
+  <Target Name="AfterSolutionCompileCustom">
+    <!-- Enter your custom steps here. -->
+  </Target>
+
+  <Target Name="BeforeDeployForTestCustom">
+    <!-- Enter your custom steps here. -->
+  </Target>
+
+  <Target Name="AfterDeployForTestCustom">
+    <!-- Enter your custom steps here. -->
+  </Target>
+
+  <Target Name="BeforeStopBizTalkApplicationCustom">
+    <!-- Enter your custom steps here. -->
+  </Target>
+
+  <Target Name="AfterStopBizTalkApplicationCustom">
+    <!-- Enter your custom steps here. -->
+  </Target>
+
+  <Target Name="BeforeRemoveBizTalkApplicationAssembliesFromGacCustom">
+    <!-- Enter your custom steps here. -->
+  </Target>
+
+  <Target Name="AfterRemoveBizTalkApplicationAssembliesFromGacCustom">
+    <!-- Enter your custom steps here. -->
+  </Target>
+
+  <Target Name="BeforeRemoveBizTalkApplicationCustom">
+    <!-- Enter your custom steps here. -->
+  </Target>
+
+  <Target Name="AfterRemoveBizTalkApplicationCustom">
+    <!-- Enter your custom steps here. -->
+  </Target>
+
+  <Target Name="BeforeDeleteBizTalkHandlersCustom">
+    <!-- Enter your custom steps here. -->
+  </Target>
+
+  <Target Name="AfterDeleteBizTalkHandlersCustom">
+    <!-- Enter your custom steps here. -->
+  </Target>
+
+  <Target Name="BeforeDeleteBizTalkHostsCustom">
+    <!-- Enter your custom steps here. -->
+  </Target>
+
+  <Target Name="AfterDeleteBizTalkHostsCustom">
+    <!-- Enter your custom steps here. -->
+  </Target>
+
+  <Target Name="BeforeCreateBizTalkHostsCustom">
+    <!-- Enter your custom steps here. -->
+    <!-- 
+    Copy xxx.Pipelines.Components.dll to C:\Program Files (x86)\Microsoft BizTalk Server 2009\Pipeline Components\, 
+    this is required for runtime execution of the pipeline components.
+    -->
+    <!--
+    <Copy
+      SourceFiles="$(BuildDirectoryPath)\$(SolutionConfigurationToDeploy)\AcmeCorp.BizTalkBuildSample.Pipelines.Components.dll"
+      DestinationFolder="D:\Program Files (x86)\Microsoft BizTalk Server 2010\Pipeline Components" />
+    -->
+  </Target>
+
+  <Target Name="AfterCreateBizTalkHostsCustom">
+    <!-- Enter your custom steps here. -->
+  </Target>
+
+  <Target Name="BeforeCreateBizTalkHandlersCustom">
+    <!-- Enter your custom steps here. -->
+  </Target>
+
+  <Target Name="AfterCreateBizTalkHandlersCustom">
+    <!-- Enter your custom steps here. -->
+  </Target>
+
+  <Target Name="BeforeCreateBizTalkApplicationCustom">
+    <!-- Enter your custom steps here. -->
+    <MSBuild
+      Condition=" '$(IsDesktopBuild)'=='true' And '%(Environments.IsIncludedInDesktopBuild)'=='true' "
+      Projects="$(MSBuildProjectFile)"
+      Targets="GenerateBindingFiles"
+      Properties="EnvironmentsIdentity=%(Environments.Identity);EnvironmentBindingDictionaryFilePath=%(Environments.BindingDictionaryFilePath);EnvironmentIsIncludedInDesktopBuild=%(Environments.IsIncludedInDesktopBuild)" />
+    <MSBuild
+      Condition=" '$(IsDesktopBuild)'!='true' "
+      Projects="$(MSBuildProjectFile)"
+      Targets="GenerateBindingFiles"
+      Properties="EnvironmentsIdentity=%(Environments.Identity);EnvironmentBindingDictionaryFilePath=%(Environments.BindingDictionaryFilePath);EnvironmentIsIncludedInDesktopBuild=%(Environments.IsIncludedInDesktopBuild)" />
+  </Target>
+
+  <Target Name="AfterCreateBizTalkApplicationCustom">
+    <!-- Enter your custom steps here. -->
+  </Target>
+
+  <Target Name="BeforeExportBizTalkApplicationCustom">
+    <!-- Enter your custom steps here. -->
+  </Target>
+
+  <Target Name="AfterExportBizTalkApplicationCustom">
+    <!-- Enter your custom steps here. -->
+  </Target>
+
+  <Target Name="BeforeImportBindingsForBizTalkApplicationCustom">
+    <!-- Enter your custom steps here. -->
+  </Target>
+
+  <Target Name="AfterImportBindingsForBizTalkApplicationCustom">
+    <!-- Enter your custom steps here. -->
+  </Target>
+
+  <Target Name="BeforeStartBizTalkApplicationCustom">
+    <!-- Enter your custom steps here. -->
+  </Target>
+
+  <Target Name="AfterStartBizTalkApplicationCustom">
+    <!-- Enter your custom steps here. -->
+  </Target>
+
+  <Target Name="BeforeRunTestsCustom">
+    <!-- Enter your custom steps here. -->
+  </Target>
+
+  <Target Name="BeforeRunTestsForConfigurationCustom">
+    <!-- Enter your custom steps here. -->
+  </Target>
+
+  <Target Name="AfterRunTestsForConfigurationCustom">
+    <!-- Enter your custom steps here. -->
+  </Target>
+
+  <Target Name="AfterRunTestsCustom">
+    <!-- Enter your custom steps here. -->
+  </Target>
+
+  <Target Name="BeforePackageCustom">
+    <!-- Enter your custom steps here. -->
+  </Target>
+
+  <Target Name="AfterPackageCustom">
+    <!-- Enter your custom steps here. -->
+  </Target>
+
+  <Target Name="BeforeBuildDocumentationCustom">
+    <!-- Enter your custom steps here. -->
+  </Target>
+
+  <Target Name="AfterBuildDocumentationCustom">
+    <!-- Enter your custom steps here. -->
+  </Target>
+
+  <Target Name="BeforeDropBuildCustom">
+    <!-- Enter your custom steps here. -->
+  </Target>
+
+  <Target Name="AfterDropBuildCustom">
+    <!-- Enter your custom steps here. -->
+  </Target>
+
+  <!-- Only called if "IsEnvironmentDeployBuild" property is set to "true". -->
+  <Target Name="BeforeEnvironmentDeployCustom">
+    <!-- Enter your custom steps here. -->
+  </Target>
+
+  <Target Name="DeployToIntegration">
+    <!-- Enter your custom steps here. -->
+  </Target>
+
+  <!-- Only called if "IsEnvironmentDeployBuild" property is set to "true". -->
+  <Target Name="AfterEnvironmentDeployCustom">
+    <!-- Enter your custom steps here. -->
+  </Target>
+
+</Project>

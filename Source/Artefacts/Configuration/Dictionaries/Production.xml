@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ConfigurationDictionary>
+
+  <!-- General -->
+  <Entry expectedMatches="2" regularExpression="##EnvironmentName##">
+    <ReplacementValue>Production</ReplacementValue>
+  </Entry>
+
+</ConfigurationDictionary>
