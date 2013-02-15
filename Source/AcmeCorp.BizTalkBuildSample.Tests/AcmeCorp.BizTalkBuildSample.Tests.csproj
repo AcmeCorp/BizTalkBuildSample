@@ -72,6 +72,7 @@
   <ItemGroup>
     <Compile Include="GlobalSuppressions.cs" />
     <Compile Include="MessageOrchestrationTests.cs" />
+    <Compile Include="MsmqPurgeStep.cs" />
     <Compile Include="MsmqReadStep.cs" />
     <Compile Include="MsmqWriteStep.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

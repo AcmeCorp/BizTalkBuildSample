@@ -83,8 +83,7 @@
   <PropertyGroup>
     <BizTalkConfigDatabaseName>BizTalkMgmtDb</BizTalkConfigDatabaseName>
     <BizTalkDatabaseServerName>$(ComputerName)</BizTalkDatabaseServerName>
-    <BizTalkManagementDatabaseConnectionString>server=$(BizTalkDatabaseServerName);database=$(BizTalkConfigDatabaseName);integrated security=sspi;</BizTalkManagementDatabaseConnectionString>
-    <BizTalkServiceUsername>$(ComputerName)\BizTalkAccount1</BizTalkServiceUsername>
+    <BizTalkServiceUsername>$(ComputerName)\DefaultBizTalkAccount</BizTalkServiceUsername>
     <BizTalkServicePassword>password1</BizTalkServicePassword>
     <SolutionConfigurationToDeploy>Debug</SolutionConfigurationToDeploy>
   </PropertyGroup>
@@ -92,10 +91,14 @@
   <!---
   Property overrides for BizTalk.
   -->
-  <PropertyGroup Condition=" '$(ComputerName)'=='MyMachineName' ">
-    <BizTalkDatabaseServerName>$(ComputerName)\InstanceName</BizTalkDatabaseServerName>
-    <BizTalkServiceUsername>$(ComputerName)\BizTalkAccount2</BizTalkServiceUsername>
+  <PropertyGroup Condition=" '$(ComputerName)'=='ComputerWithSpecificSettings' ">
+    <BizTalkDatabaseServerName>$(ComputerName)\MySqlInstance</BizTalkDatabaseServerName>
+    <BizTalkServiceUsername>$(ComputerName)\CustomBizTalkAccount</BizTalkServiceUsername>
     <BizTalkServicePassword>password2</BizTalkServicePassword>
+  </PropertyGroup>
+
+  <PropertyGroup>
+    <BizTalkManagementDatabaseConnectionString>server=$(BizTalkDatabaseServerName);database=$(BizTalkConfigDatabaseName);integrated security=sspi;</BizTalkManagementDatabaseConnectionString>
   </PropertyGroup>
 
   <ItemGroup>
@@ -148,7 +151,7 @@
     <BizTalkGacLocaleFilter>*</BizTalkGacLocaleFilter>
     <BizTalkGacPublicKeyTokenFilter>*</BizTalkGacPublicKeyTokenFilter>
     <BizTalkHostWindowsGroupName>BizTalk Application Users</BizTalkHostWindowsGroupName>
-    <BizTalkInstallerPackageOutputPath>$(BBuildDirectoryPath)\$(SolutionConfigurationToDeploy)\$(BizTalkApplicationName).$(SolutionConfigurationToDeploy).msi</BizTalkInstallerPackageOutputPath>
+    <BizTalkInstallerPackageOutputPath>$(BuildDirectoryPath)\$(SolutionConfigurationToDeploy)\$(BizTalkApplicationName).$(SolutionConfigurationToDeploy).msi</BizTalkInstallerPackageOutputPath>
     <BizTalkServerName>$(ComputerName)</BizTalkServerName>
     <BizTalkInstallDirectory>%BTAD_InstallDir%\$(BizTalkApplicationName)</BizTalkInstallDirectory>
     <!-- This controls which "BindingsFile" is applied to the current environment. -->

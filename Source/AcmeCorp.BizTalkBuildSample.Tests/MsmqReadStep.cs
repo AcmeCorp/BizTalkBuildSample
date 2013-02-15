@@ -1,10 +1,8 @@
 ﻿namespace AcmeCorp.BizTalkBuildSample.Tests
 {
     using System;
-    using System.IO;
     using System.Messaging;
-    using System.Xml;
-
+    
     using BizUnit;
     using BizUnit.Common;
     using BizUnit.Xaml;
