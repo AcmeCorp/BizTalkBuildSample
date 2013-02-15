@@ -6,9 +6,9 @@
   <Import Project="..\packages\StealFocus.Build.1.2.30211.0\Scripts\StealFocus.Build.tasks" />
 
   <PropertyGroup>
-    <CompanyName>AcmeCor</CompanyName>
+    <CompanyName>AcmeCorp</CompanyName>
     <Culture>en-GB</Culture>
-    <ProductName>.BizTalkBuildSample</ProductName>
+    <ProductName>BizTalkBuildSample</ProductName>
     <StrongNamePublicKey>00240000048000009400000006020000002400005253413100040000010001004ffd93a09b0855cd8c69b57b70646307b6d71948319bfd9073ddb89462c1f7be88a5b6ba24a2549ec9cbfb6c71417c711da071a8cfd9a0eae88198fa81a99ec60ad758a7408b61ac7876c7427e6910ed7c321509679941a91a7a3d1be4d2462d478e8d58cada6dffd64a8e5815c80e926ac6f54cb3631ddc29c65413947302e1</StrongNamePublicKey>
     <StrongNamePublicKeyToken>0d8f5aaf5eccc8df</StrongNamePublicKeyToken>
     <StyleCopVersion>4.5</StyleCopVersion>
