@@ -307,7 +307,7 @@
       <TargetFilePaths Include="..\Artefacts\BizTalk\Bindings\Temp\$(EnvironmentsIdentity)\*$(EnvironmentsIdentity).*" />
     </ItemGroup>
     <Exec
-      Command='powershell -nologo -noprofile -executionpolicy unrestricted -command "&amp; { . \".\ConfigurationFiles-Generate.ps1\"; Generate-ConfigurationFiles -DictionaryFilePath \"$(EnvironmentBindingDictionaryFilePath)\" -TemplatesDirectoryPath \"..\Artefacts\BizTalk\Bindings\Temp\$(EnvironmentsIdentity)\" -TargetDirectoryPath \"..\Artefacts\BizTalk\Bindings\" -verbose }"'
+      Command='powershell -nologo -noprofile -executionpolicy unrestricted -command "&amp; { . \".\ConfigurationFiles-Generate.ps1\"; Generate-ConfigurationFiles -DictionaryFilePath \"$(EnvironmentBindingDictionaryFilePath)\" -TemplatesDirectoryPath \"..\Artefacts\BizTalk\Bindings\Temp\$(EnvironmentsIdentity)\" -TargetDirectoryPath \"..\Artefacts\BizTalk\Bindings\" -VersionNumber \"$(VersionNumber)\" -verbose }"'
       LogStandardErrorAsError="true"
       ContinueOnError="false" />
   </Target>

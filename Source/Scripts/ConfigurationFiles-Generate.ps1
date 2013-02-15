@@ -4,7 +4,8 @@ function Generate-ConfigurationFiles (
     [string]$targetDirectoryPath = $(throw '$targetDirectoryPath is a required parameter'),
     [bool]$matchFilesInTargetDirectory = $false,
     [switch]$verbose=$false,
-    [switch]$whatIf=$false) {
+    [switch]$whatIf=$false,
+	[string]$versionNumber) {
 
     # Test the existence of the dictionary
     [bool]$dictionaryExists = Test-Path $dictionaryFilePath
@@ -79,6 +80,14 @@ function Generate-ConfigurationFiles (
 			$templateContent = $regex.Replace($templateContent, $replacementValue)
             $matchResults[$entry.regularExpression] += $matchCount;
         }
+
+		if ($versionNumber -ne $null)
+		{
+			# Replace version number
+			$versionRegex = New-Object System.Text.RegularExpressions.Regex "##VersionNumber##", SingleLine
+			$templateContent = $versionRegex.Replace($templateContent, $versionNumber)
+		}
+
         [System.IO.File]::WriteAllText($filePath, $templateContent);
     }
 
