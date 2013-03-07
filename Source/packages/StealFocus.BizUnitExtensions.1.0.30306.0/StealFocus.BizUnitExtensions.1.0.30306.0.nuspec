@@ -1,0 +1,19 @@
+<?xml version="1.0"?>
+<package xmlns="http://schemas.microsoft.com/packaging/2011/08/nuspec.xsd">
+  <metadata>
+    <id>StealFocus.BizUnitExtensions</id>
+    <version>1.0.30306.0</version>
+    <authors>Callum Hibbert</authors>
+    <owners>Callum Hibbert</owners>
+    <requireLicenseAcceptance>false</requireLicenseAcceptance>
+    <description>StealFocus BizUnitExtensions package.</description>
+    <copyright>Copyright StealFocus. All rights reserved.</copyright>
+    <tags>StealFocus BizUnitExtensions</tags>
+    <dependencies>
+      <dependency id="BizUnit" version="4.0.0" />
+    </dependencies>
+    <references>
+      <reference file="StealFocus.BizUnitExtensions.dll" />
+    </references>
+  </metadata>
+</package>

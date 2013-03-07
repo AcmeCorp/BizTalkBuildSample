@@ -14,6 +14,8 @@
     <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <ProjectTypeGuids>{3AC096D0-A1C2-E12C-1390-A8335801FDAB};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
+    <SolutionDir Condition="$(SolutionDir) == '' Or $(SolutionDir) == '*Undefined*'">..\</SolutionDir>
+    <RestorePackages>true</RestorePackages>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -56,6 +58,9 @@
       <HintPath>..\packages\BizUnit.4.0.0\BizUnit.TestSteps.BizTalk.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.VisualStudio.QualityTools.UnitTestFramework, Version=10.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL" />
+    <Reference Include="StealFocus.BizUnitExtensions">
+      <HintPath>..\packages\StealFocus.BizUnitExtensions.1.0.30306.0\lib\net40-Full\StealFocus.BizUnitExtensions.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core">
       <RequiredTargetFramework>3.5</RequiredTargetFramework>
@@ -72,17 +77,14 @@
   <ItemGroup>
     <Compile Include="GlobalSuppressions.cs" />
     <Compile Include="MessageOrchestrationTests.cs" />
-    <Compile Include="MsmqPurgeStep.cs" />
-    <Compile Include="MsmqReadStep.cs" />
-    <Compile Include="MsmqWriteStep.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Properties\AssemblyInfoCommon.g.cs" />
-    <Compile Include="XPathValidationStep.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="..\AcmeCorp.BizTalkBuildSample.StrongNamePublicKey.snk">
       <Link>AcmeCorp.BizTalkBuildSample.StrongNamePublicKey.snk</Link>
     </None>
+    <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
     <CodeAnalysisDictionary Include="..\FxCopCustomDictionary.xml">

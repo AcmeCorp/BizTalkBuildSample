@@ -1,4 +1,4 @@
-﻿namespace AcmeCorp.BizTalkBuildSample.Tests
+namespace $rootnamespace$
 {
     using System.Collections.ObjectModel;
     using System.Reflection;
@@ -12,7 +12,7 @@
     using StealFocus.BizUnitExtensions;
 
     [TestClass]
-    public class MessageOrchestrationTests
+    public class IntegrationTestExample
     {
         private const int ThirtySecondsInMilliseconds = 30000;
 
