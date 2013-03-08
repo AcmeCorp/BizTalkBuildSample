@@ -1,7 +1,7 @@
 BizTalkBuildSample
 ==================
 
-An example of the StealFocus Build solution to build a BizTalk solution, this includes:
+An example of the StealFocus Build framework to build a BizTalk solution, this includes:
 
 - Compiling the soluton.
 - Creating the BizTalk application.
